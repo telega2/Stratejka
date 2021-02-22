@@ -625,7 +625,7 @@ class Builder(pygame.sprite.Sprite):
         self.a = 2
         self.b = 2
         self.length_of_movement = 4
-        self.image = load_image("Builder.jpg")
+        self.image = load_image("Builder.PNG")
         Builder.image = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -663,7 +663,7 @@ class SuperCannon(pygame.sprite.Sprite):
         self.a = 4
         self.b = 5
         self.length_of_movement = 2
-        self.image = load_image("SuperCannon.jpg")
+        self.image = load_image("SuperCannon.PNG")
         SuperCannon.image = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -698,7 +698,7 @@ class Tank(pygame.sprite.Sprite):
         self.a = 2
         self.b = 2
         self.length_of_movement = 4
-        self.image = load_image("Tank.jpg")
+        self.image = load_image("Tank.PNG")
         Tank.image = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -733,7 +733,7 @@ class BigTank(pygame.sprite.Sprite):
         self.a = 2
         self.b = 3
         self.length_of_movement = 3
-        self.image = load_image("BigTank.jpg")
+        self.image = load_image("BigTank.PNG")
         BigTank.image = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
