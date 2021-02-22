@@ -610,9 +610,11 @@ class Sprinter(pygame.sprite.Sprite):
             haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
 
 
-class Builder(Board):
-    def __init__(self, wi, he, x, y):
-        super().__init__(wi, he)
+class Builder(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
         self.x = x
         self.y = y
         self.price = 16
@@ -624,6 +626,10 @@ class Builder(Board):
         self.b = 2
         self.length_of_movement = 4
         self.image = load_image("Builder.jpg")
+        Builder.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def spisok_deistvii(self):
         pass
@@ -637,13 +643,16 @@ class Builder(Board):
     def build(self):
         pass
 
-    def show_object(self, screen):
-        self.make_rect(screen, (102, 102, 102), self.x, self.y, self.a, self.b)
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_geroev(args[1], self.price, self.hp, self.strength_of_close_attack, "NO")
 
 
-class SuperCannon(Board):
-    def __init__(self, wi, he, x, y):
-        super().__init__(wi, he)
+class SuperCannon(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
         self.x = x
         self.y = y
         self.price = 60
@@ -655,6 +664,10 @@ class SuperCannon(Board):
         self.b = 5
         self.length_of_movement = 2
         self.image = load_image("SuperCannon.jpg")
+        SuperCannon.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def spisok_deistvii(self):
         pass
@@ -665,13 +678,16 @@ class SuperCannon(Board):
     def move(self):
         pass
 
-    def show_object(self, screen):
-        self.make_rect(screen, (153, 153, 153), self.x, self.y, self.a, self.b)
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_geroev(args[1], self.price, self.hp, "No", self.strength_of_far_attack)
 
 
-class Tank(Board):
-    def __init__(self, wi, he, x, y):
-        super().__init__(wi, he)
+class Tank(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
         self.x = x
         self.y = y
         self.price = 12
@@ -683,6 +699,10 @@ class Tank(Board):
         self.b = 2
         self.length_of_movement = 4
         self.image = load_image("Tank.jpg")
+        Tank.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def spisok_deistvii(self):
         pass
@@ -693,13 +713,16 @@ class Tank(Board):
     def move(self):
         pass
 
-    def show_object(self, screen):
-        self.make_rect(screen, (204, 204, 204), self.x, self.y, self.a, self.b)
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
 
 
-class BigTank(Board, pygame.sprite.Sprite):
-    def __init__(self, wi, he, x, y):
-        super().__init__(wi, he)
+class BigTank(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
         self.x = x
         self.y = y
         self.price = 20
@@ -711,6 +734,10 @@ class BigTank(Board, pygame.sprite.Sprite):
         self.b = 3
         self.length_of_movement = 3
         self.image = load_image("BigTank.jpg")
+        BigTank.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def spisok_deistvii(self):
         pass
@@ -721,13 +748,16 @@ class BigTank(Board, pygame.sprite.Sprite):
     def move(self):
         pass
 
-    def show_object(self, screen):
-        self.make_rect(screen, (0, 51, 102), self.x, self.y, self.a, self.b)
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
 
 
-class Turel(Board):
-    def __init__(self, wi, he, x, y):
-        super().__init__(wi, he)
+class Turel(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
         self.x = x
         self.y = y
         self.price = 6
@@ -738,7 +768,11 @@ class Turel(Board):
         self.a = 1
         self.b = 1
         self.length_of_movement = 0
-        self.image = load_image("Turel.jpg")
+        self.image = load_image("Turel.PNG")
+        Turel.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def spisok_deistvii(self):
         pass
@@ -749,8 +783,9 @@ class Turel(Board):
     def move(self):
         pass
 
-    def show_object(self, screen):
-        self.make_rect(screen, (51, 102, 153), self.x, self.y, self.a, self.b)
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
 
 
 class Tile(Board):
@@ -794,13 +829,18 @@ class Arch(Tile):
 
 def main():
     pygame.init()
-    size = he, wi = 850, 661
+    size = he, wi = 870, 661
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Ирга')
     board = Board(64, 64)
     board.set_view(10, 10, 10)
     all_sprites = pygame.sprite.Group()
     Sprinter(all_sprites, x=30, y=30)
+    Builder(all_sprites, x=50, y=50)
+    SuperCannon(all_sprites, x=100, y=100)
+    Tank(all_sprites, x=150, y=150)
+    BigTank(all_sprites, x=200, y=200)
+    Turel(all_sprites, x=250, y=250)
     running = True
     while running:
         all_sprites.update()
