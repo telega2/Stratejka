@@ -82,7 +82,6 @@ class Board:
                 pygame.draw.rect(screen, pygame.Color('white'), (x * self.cell_size + self.left,
                                                                  y * self.cell_size + self.top, self.cell_size,
                                                                  self.cell_size), 1)
-        self.make_rect(screen, 'green', 5, 61, 5, 3)  # пункт управления
         # self.make_rect(screen, 'dark blue', 1, 58, 4, 1)  # барак
         #self.make_rect(screen, 'red', 1, 55, 4, 2)  # медпункт
         # self.make_rect(screen, 'dark blue', 1, 53, 4, 1)  # барак
@@ -475,7 +474,6 @@ class Board:
         self.make_rect(screen, 'dark blue', 63, 0, 1, 4)
         self.make_rect(screen, 'dark blue', 61, 0, 1, 4)
         self.make_rect(screen, 'blue', 62, 0, 1, 4)
-        self.make_rect(screen, 'green', 56, 3, 4, 4)
         self.make_rect(screen, 'orange', 58, 9, 1, 2)
         self.make_rect(screen, 'orange', 59, 10, 1, 1)
         self.make_rect(screen, 'orange', 55, 9, 2, 4)
@@ -908,7 +906,8 @@ def main():
             for q in range(l1):
                 Road(all_sprites, x=(10 * x1 + i * 10 + 1), y=(10 * y1 + q * 10 + 1))
     #Barak(all_sprites, x=30, y=30)
-    #Center(all_sprites, x=100, y=100)
+    Center(all_sprites, x=60, y=610)
+    Center(all_sprites, x=570, y=40)
     #Road(all_sprites, x=200, y=200)
     #Factory(all_sprites, x=300, y=300)
     running = True
