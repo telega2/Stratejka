@@ -897,6 +897,16 @@ def main():
         for i in range(l):
             for q in range(l1):
                 Mountain(all_sprites, x=(10 * x1 + i * 10), y=(10 * y1 + q * 10))
+
+    ind_road = [(1, 22, 16, 13)]
+    for j in ind_road:
+        x1 = j[0]
+        y1 = j[1]
+        l = j[2]
+        l1 = j[3]
+        for i in range(l):
+            for q in range(l1):
+                Road(all_sprites, x=(10 * x1 + i * 10 + 1), y=(10 * y1 + q * 10 + 1))
     #Barak(all_sprites, x=30, y=30)
     #Center(all_sprites, x=100, y=100)
     #Road(all_sprites, x=200, y=200)
