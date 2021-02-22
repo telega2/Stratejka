@@ -45,6 +45,23 @@ def load_image(name, color_key=None):
     return image
 
 
+def load_image2(name, color_key=None):
+    fullname = os.path.join('текстуры, проект', name)
+    try:
+        image = pygame.image.load(fullname).convert()
+    except pygame.error as message:
+        print('Cannot load image', name)
+        raise SystemExit(message)
+
+    if color_key is not None:
+        if color_key == -1:
+            color_key = image.get_at((0, 0))
+        image.set_colorkey(color_key)
+    else:
+        image = image.convert_alpha()
+    return image
+
+
 class Board:
     def __init__(self, wi, he):
         self.wi = wi
@@ -65,7 +82,6 @@ class Board:
                 pygame.draw.rect(screen, pygame.Color('white'), (x * self.cell_size + self.left,
                                                                  y * self.cell_size + self.top, self.cell_size,
                                                                  self.cell_size), 1)
-        self.make_rect(screen, 'yellow', 0, 60, 4, 4)  # рудник
         self.make_rect(screen, 'green', 5, 61, 5, 3)  # пункт управления
         # self.make_rect(screen, 'dark blue', 1, 58, 4, 1)  # барак
         #self.make_rect(screen, 'red', 1, 55, 4, 2)  # медпункт
@@ -136,12 +152,6 @@ class Board:
         pygame.draw.rect(screen, pygame.Color('grey'), (16 * self.cell_size + self.left,
                                                          16 * self.cell_size + self.top, 32 * self.cell_size,
                                                          32 * self.cell_size))  # гора
-        pygame.draw.rect(screen, pygame.Color('yellow'), (16 * self.cell_size + self.left,
-                                                          44 * self.cell_size + self.top, self.cell_size * 4,
-                                                          self.cell_size * 4))  # рудник
-        pygame.draw.rect(screen, pygame.Color('yellow'), (44 * self.cell_size + self.left,
-                                                          44 * self.cell_size + self.top, self.cell_size * 4,
-                                                          self.cell_size * 4))  # рудник
         pygame.draw.rect(screen, pygame.Color('orange'), (14 * self.cell_size + self.left,
                                                           60 * self.cell_size + self.top, 1 * self.cell_size,
                                                           4 * self.cell_size))  # здания
@@ -468,10 +478,6 @@ class Board:
         self.make_rect(screen, 'dark blue', 63, 0, 1, 4)
         self.make_rect(screen, 'dark blue', 61, 0, 1, 4)
         self.make_rect(screen, 'blue', 62, 0, 1, 4)
-        self.make_rect(screen, 'yellow', 56, 1, 4, 1)
-        self.make_rect(screen, 'yellow', 61, 4, 1, 3)
-        self.make_rect(screen, 'yellow', 62, 15, 2, 1)
-        self.make_rect(screen, 'yellow', 59, 16, 5, 1)
         self.make_rect(screen, 'green', 56, 3, 4, 4)
         self.make_rect(screen, 'orange', 58, 9, 1, 2)
         self.make_rect(screen, 'orange', 59, 10, 1, 1)
@@ -481,24 +487,10 @@ class Board:
         self.make_rect(screen, 'orange', 50, 3, 1, 6)
         self.make_rect(screen, 'orange', 51, 7, 2, 2)
         self.make_rect(screen, 'orange', 50, 14, 2, 2)
-        self.make_rect(screen, 'yellow', 0, 0, 10, 4)
-        self.make_rect(screen, 'yellow', 0, 4, 9, 2)
-        self.make_rect(screen, 'yellow', 0, 6, 7, 4)
-        self.make_rect(screen, 'yellow', 0, 10, 5, 6)
-        self.make_rect(screen, 'yellow', 0, 16, 3, 5)
-        self.make_rect(screen, 'yellow', 18, 19, 2, 4)
-        self.make_rect(screen, 'yellow', 20, 19, 1, 3)
-        self.make_rect(screen, 'yellow', 21, 18, 2, 3)
-        self.make_rect(screen, 'yellow', 23, 18, 1, 2)
-        self.make_rect(screen, 'yellow', 24, 18, 2, 1)
         self.make_rect(screen, 'orange', 25, 23, 4, 3)
         self.make_rect(screen, 'orange', 30, 23, 1, 1)
         self.make_rect(screen, 'orange', 30, 24, 3, 2)
         self.make_rect(screen, 'orange', 34, 23, 1, 3)
-        self.make_rect(screen, 'yellow', 37, 20, 4, 1)
-        self.make_rect(screen, 'yellow', 39, 21, 4, 1)
-        self.make_rect(screen, 'yellow', 42, 22, 2, 1)
-        self.make_rect(screen, 'yellow', 44, 23, 1, 2)
         self.make_rect(screen, 'orange', 25, 12, 5, 2)
         self.make_rect(screen, 'orange', 30, 12, 1, 1)
         self.make_rect(screen, 'orange', 33, 12, 2, 2)
@@ -797,22 +789,40 @@ class Tile(Board):
         return self.color
 
 
-class Ore(Tile):
-    def __init__(self, wi, he):
-        super().__init__(wi, he)
-        self.color = pygame.Color(237, 160, 49)
+class Ore(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
+        self.image = load_image2("Рудник.jpg")
+        Ore.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 
-class Mountain(Tile):
-    def __init__(self, wi, he):
-        super().__init__(wi, he)
-        self.color = pygame.Color(120, 120, 120)
+class Mountain(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
+        self.image = load_image2("Асфальт.jpg")
+        Mountain.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 
-class Building(Tile):
-    def __init__(self, wi, he):
-        super().__init__(wi, he)
-        self.color = pygame.Color(60, 60, 60)
+class Building(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
+        self.image = load_image2("1.jpg")
+        Building.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 
 class Park(Tile):
@@ -820,11 +830,49 @@ class Park(Tile):
         super().__init__(wi, he)
         self.color = pygame.Color(152, 255, 152)
 
+class Barak(pygame.sprite.Sprite):
+    image = None
 
-class Arch(Tile):
-    def __init__(self, wi, he):
-        super().__init__(wi, he)
-        self.color = pygame.Color(80, 80, 80)
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
+        self.image = load_image2("Барак.jpg")
+        Barak.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class Center(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
+        self.image = load_image2("КомандныйЦентр.jpg")
+        Center.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class Road(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
+        self.image = load_image2("Земля.jpg")
+        Road.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class Factory(pygame.sprite.Sprite):
+    image = None
+
+    def __init__(self, *group, x, y):
+        super().__init__(*group)
+        self.image = load_image2("Завод.jpg")
+        Factory.image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 
 def main():
@@ -835,12 +883,24 @@ def main():
     board = Board(64, 64)
     board.set_view(10, 10, 10)
     all_sprites = pygame.sprite.Group()
-    Sprinter(all_sprites, x=30, y=30)
-    Builder(all_sprites, x=50, y=50)
-    SuperCannon(all_sprites, x=100, y=100)
-    Tank(all_sprites, x=150, y=150)
-    BigTank(all_sprites, x=200, y=200)
-    Turel(all_sprites, x=250, y=250)
+
+    ind_rud = [(1, 1, 10), (1, 2, 10), (1, 3, 10), (1, 4, 10), (1, 5, 9), (1, 6, 9), (1, 7, 7), (1, 8, 7), (1, 9, 7),
+               (1, 10, 7), (1, 11, 5), (1, 12, 5), (1, 13, 5), (1, 14, 5), (1, 15, 5), (1, 16, 5), (1, 17, 3),
+               (1, 18, 3), (1, 19, 3), (1, 20, 3), (1, 21, 3), (1, 61, 4), (1, 62, 4), (1, 63, 4), (1, 64, 4),
+               (17, 45, 4), (17, 46, 4), (17, 47, 4), (17, 48, 4), (45, 45, 4), (45, 46, 4), (45, 47, 4), (45, 48, 4),
+               (19, 20, 6), (19, 21, 5), (19, 22, 3), (19, 23, 2), (22, 19, 5), (38, 21, 4), (40, 22, 4), (43, 23, 2),
+               (45, 24, 1), (45, 25, 1), (57, 2, 4), (62, 5, 1), (62, 6, 1), (62, 7, 1), (60, 17, 5), (63, 16, 2)]
+    for j in ind_rud:
+        x1 = j[0]
+        y1 = j[1]
+        l = j[2]
+        for i in range(l):
+            Ore(all_sprites, x=(10 * x1 + i * 10), y=(10 * y1))
+    #Mountain(all_sprites, x=20, y=20)
+    #Barak(all_sprites, x=30, y=30)
+    #Center(all_sprites, x=100, y=100)
+    #Road(all_sprites, x=200, y=200)
+    #Factory(all_sprites, x=300, y=300)
     running = True
     while running:
         all_sprites.update()
