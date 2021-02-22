@@ -149,9 +149,6 @@ class Board:
         pygame.draw.rect(screen, pygame.Color('brown'), (7 * self.cell_size + self.left,
                                                          34 * self.cell_size + self.top, 1 * self.cell_size,
                                                          self.cell_size))  # арка
-        pygame.draw.rect(screen, pygame.Color('grey'), (16 * self.cell_size + self.left,
-                                                         16 * self.cell_size + self.top, 32 * self.cell_size,
-                                                         32 * self.cell_size))  # гора
         pygame.draw.rect(screen, pygame.Color('orange'), (14 * self.cell_size + self.left,
                                                           60 * self.cell_size + self.top, 1 * self.cell_size,
                                                           4 * self.cell_size))  # здания
@@ -780,15 +777,6 @@ class Turel(pygame.sprite.Sprite):
             haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
 
 
-class Tile(Board):
-    def __init__(self, wi, he):
-        super().__init__(wi, he)
-        self.color = pygame.Color(255, 255, 255)
-
-    def get_color(self):
-        return self.color
-
-
 class Ore(pygame.sprite.Sprite):
     image = None
 
@@ -806,7 +794,7 @@ class Mountain(pygame.sprite.Sprite):
 
     def __init__(self, *group, x, y):
         super().__init__(*group)
-        self.image = load_image2("Асфальт.jpg")
+        self.image = load_image2("IMG_7203 5.jpg")
         Mountain.image = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -825,10 +813,10 @@ class Building(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-class Park(Tile):
-    def __init__(self, wi, he):
-        super().__init__(wi, he)
-        self.color = pygame.Color(152, 255, 152)
+#class Park(Tile):
+    #def __init__(self, wi, he):
+     #   super().__init__(wi, he)
+      #  self.color = pygame.Color(152, 255, 152)
 
 class Barak(pygame.sprite.Sprite):
     image = None
@@ -857,7 +845,7 @@ class Road(pygame.sprite.Sprite):
 
     def __init__(self, *group, x, y):
         super().__init__(*group)
-        self.image = load_image2("Земля.jpg")
+        self.image = load_image2("Асфальт.jpg")
         Road.image = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -896,7 +884,19 @@ def main():
         l = j[2]
         for i in range(l):
             Ore(all_sprites, x=(10 * x1 + i * 10), y=(10 * y1))
-    #Mountain(all_sprites, x=20, y=20)
+
+    ind_mount = [(21, 45, 24, 4), (17, 27, 32, 18), (17, 24, 9, 3), (30, 24, 1, 3), (34, 24, 1, 3), (32, 24, 2, 1),
+                 (17, 17, 2, 7), (19, 17, 3, 3), (22, 17, 27, 2), (27, 19, 22, 2), (24, 21, 14, 3), (25, 20, 2, 1),
+                 (22, 22, 2, 2), (21, 23, 1, 1), (38, 22, 2, 2), (36, 24, 9, 3), (40, 23, 3, 1), (46, 21, 3, 6),
+                 (42, 21, 2, 1), (44, 21, 2, 2), (45, 23, 1, 1), (45, 26, 1, 1)]
+    for j in ind_mount:
+        x1 = j[0]
+        y1 = j[1]
+        l = j[2]
+        l1 = j[3]
+        for i in range(l):
+            for q in range(l1):
+                Mountain(all_sprites, x=(10 * x1 + i * 10), y=(10 * y1 + q * 10))
     #Barak(all_sprites, x=30, y=30)
     #Center(all_sprites, x=100, y=100)
     #Road(all_sprites, x=200, y=200)
