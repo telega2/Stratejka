@@ -2,7 +2,23 @@ import pygame
 import os
 
 
-def haracteristica_geroev(screen, price, hp, strength_of_close_attack, strength_of_far_attack):
+def haracteristica_geroev(screen, price, hp, strength_of_close_attack, strength_of_far_attack, board, x, y, l, a, b):
+    global flag_move
+    global current_x
+    global current_y
+    global current_length
+    global previous_cell
+    global current_a
+    global current_b
+    current_b = b
+    current_a = a
+    previous_cell = (x - 10, y - 10)
+    current_x = x
+    current_y = y
+    current_length = l
+    flag_move = 1
+    board.render(screen)
+    pygame.draw.rect(screen, (0, 0, 0), (650, 0, 870 - 650, 650))
     fontObj = pygame.font.Font('freesansbold.ttf', 10)
     textSurfaceObj = fontObj.render(f"PRICE: {price}", True, (255, 0, 0), (0, 0, 0))
     textRectObj = textSurfaceObj.get_rect()
@@ -25,6 +41,24 @@ def haracteristica_geroev(screen, price, hp, strength_of_close_attack, strength_
     textSurfaceObj = fontObj.render(f"STRENGTH OF FAR ATTACK: {strength_of_far_attack}", True, (255, 0, 0), (0, 0, 0))
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = (750, 200)
+    screen.blit(textSurfaceObj, textRectObj)
+
+    fontObj = pygame.font.Font('freesansbold.ttf', 15)
+    textSurfaceObj = fontObj.render("MOVE", True, (255, 0, 0), (0, 0, 255))
+    textRectObj = textSurfaceObj.get_rect()
+    textRectObj.center = (750, 250)
+    screen.blit(textSurfaceObj, textRectObj)
+
+
+def haracteristica_tekstur(screen, name, board):
+    global flag_move
+    flag_move = 0
+    board.render(screen)
+    pygame.draw.rect(screen, (0, 0, 0), (650, 0, 870 - 650, 650))
+    fontObj = pygame.font.Font('freesansbold.ttf', 10)
+    textSurfaceObj = fontObj.render(f"TYPE: {name}", True, (255, 0, 0), (0, 0, 0))
+    textRectObj = textSurfaceObj.get_rect()
+    textRectObj.center = (750, 50)
     screen.blit(textSurfaceObj, textRectObj)
 
 
@@ -77,11 +111,13 @@ class Board:
                                                                  len_y * self.cell_size))
 
     def render(self, screen):
+        self.make_rect(screen, (92, 92, 92), 0, 0, 64, 64)
         for y in range(self.he):
             for x in range(self.wi):
                 pygame.draw.rect(screen, pygame.Color('white'), (x * self.cell_size + self.left,
                                                                  y * self.cell_size + self.top, self.cell_size,
                                                                  self.cell_size), 1)
+
         # self.make_rect(screen, 'dark blue', 1, 58, 4, 1)  # барак
         #self.make_rect(screen, 'red', 1, 55, 4, 2)  # медпункт
         # self.make_rect(screen, 'dark blue', 1, 53, 4, 1)  # барак
@@ -513,10 +549,45 @@ class Board:
             return None
         return cell_x, cell_y
 
-    def get_click(self, mouse_pos):
+    def get_click(self, mouse_pos, screen, all_sprites, event, board):
+        global current_length
+        global current_y
+        global current_x
+        global flag_move
+        global previous_cell
+        global current_a
+        global current_b
         cell = self.get_cell(mouse_pos)
-        if cell:
-            self.on_click(cell)
+        if flag_move == 1 and mouse_pos[0] < 780 and mouse_pos[0] > 720 and mouse_pos[1] > 230 and mouse_pos[1] < 270:
+            self.moving(screen, current_x, current_y, current_length, current_a, current_b)
+            flag_move = 2
+        elif (flag_move == 2 or flag_move == 3) and mouse_pos[0] > current_x - current_length * 10 and\
+                mouse_pos[1] > current_y - current_length * 10 and\
+                mouse_pos[0] < current_x + current_length * 10 + 10 * current_a and \
+                mouse_pos[1] < current_y + current_length * 10 + 10 * current_b:
+            pygame.draw.rect(screen, (0, 255, 0), (cell[0] * 10 + 10, cell[1] * 10 + 10, 10, 10))
+            pygame.draw.rect(screen, (255, 0, 0), (previous_cell[0] * 10 + 10, previous_cell[1] * 10 + 10, 10, 10))
+            previous_cell = cell
+            flag_move = 3
+            fontObj = pygame.font.Font('freesansbold.ttf', 15)
+            textSurfaceObj = fontObj.render(f"CHOOSE", True, (255, 0, 0), (0, 0, 0))
+            textRectObj = textSurfaceObj.get_rect()
+            textRectObj.center = (750, 300)
+            screen.blit(textSurfaceObj, textRectObj)
+        elif flag_move == 3 and mouse_pos[0] > 700 and mouse_pos[1] > 290 and mouse_pos[0] < 800 and mouse_pos[1] < 310:
+            all_sprites.update(event, screen, board, 1, previous_cell)
+            board.render(screen)
+            pygame.draw.rect(screen, (0, 0, 0), (650, 0, 870 - 650, 650))
+            flag_move = 0
+
+    def moving(self, screen, x, y, length, a, b):
+        pygame.draw.rect(screen, (255, 0, 0), (x - length * 10, y - length * 10, length * 20 + 10 * a, length * 20 + 10 * b))
+        #for i in range(length):
+         #   pygame.draw.rect(screen, (255, 0, 0), (x - length * 10 + i * 10, y - i * 10, 10, 10 + 20 * i))
+        #pygame.draw.rect(screen, (255, 0, 0), (x, y - length * 10, 10, 10 + 20 * length))
+        #for i in range(length):
+         #   pygame.draw.rect(screen, (255, 0, 0), (x + length * 10 - i * 10, y - i * 10, 10, 10 + 20 * i))
+
 
 
 class Peshka(pygame.sprite.Sprite):
@@ -542,9 +613,6 @@ class Peshka(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def spisok_deistvii(self):
-        pass
-
     def close_attack(self):
         pass
 
@@ -558,9 +626,17 @@ class Peshka(pygame.sprite.Sprite):
         pass
 
     def update(self, *args):
-        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            haracteristica_geroev(args[1], self.price, self.hp, self.strength_of_close_attack, self.strength_of_far_attack)
-
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos) and args[3] == 0:
+            haracteristica_geroev(args[1], self.price, self.hp, self.strength_of_close_attack, self.strength_of_far_attack,
+                                  args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
+        elif args and args[3] == 1:
+            global current_x
+            global current_y
+            if current_x == self.x and current_y == self.y:
+                self.x = args[4][0] * 10 + 10
+                self.y = args[4][1] * 10 + 10
+                self.rect.x = args[4][0] * 10 + 10
+                self.rect.y = args[4][1] * 10 + 10
 
 class Sprinter(pygame.sprite.Sprite):
     image = None
@@ -594,7 +670,16 @@ class Sprinter(pygame.sprite.Sprite):
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
+            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack,
+                                  args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
+        elif args and args[3] == 1:
+            global current_x
+            global current_y
+            if current_x == self.x and current_y == self.y:
+                self.x = args[4][0] * 10 + 10
+                self.y = args[4][1] * 10 + 10
+                self.rect.x = args[4][0] * 10 + 10
+                self.rect.y = args[4][1] * 10 + 10
 
 
 class Builder(pygame.sprite.Sprite):
@@ -632,7 +717,16 @@ class Builder(pygame.sprite.Sprite):
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            haracteristica_geroev(args[1], self.price, self.hp, self.strength_of_close_attack, "NO")
+            haracteristica_geroev(args[1], self.price, self.hp, self.strength_of_close_attack, "NO",
+                                  args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
+        elif args and args[3] == 1:
+            global current_x
+            global current_y
+            if current_x == self.x and current_y == self.y:
+                self.x = args[4][0] * 10 + 10
+                self.y = args[4][1] * 10 + 10
+                self.rect.x = args[4][0] * 10 + 10
+                self.rect.y = args[4][1] * 10 + 10
 
 
 class SuperCannon(pygame.sprite.Sprite):
@@ -667,7 +761,16 @@ class SuperCannon(pygame.sprite.Sprite):
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            haracteristica_geroev(args[1], self.price, self.hp, "No", self.strength_of_far_attack)
+            haracteristica_geroev(args[1], self.price, self.hp, "No", self.strength_of_far_attack,
+                                  args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
+        elif args and args[3] == 1:
+            global current_x
+            global current_y
+            if current_x == self.x and current_y == self.y:
+                self.x = args[4][0] * 10 + 10
+                self.y = args[4][1] * 10 + 10
+                self.rect.x = args[4][0] * 10 + 10
+                self.rect.y = args[4][1] * 10 + 10
 
 
 class Tank(pygame.sprite.Sprite):
@@ -701,8 +804,18 @@ class Tank(pygame.sprite.Sprite):
         pass
 
     def update(self, *args):
-        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos) and args[3] == 0:
+            haracteristica_geroev(args[1], self.price, self.hp, "NO",
+                                  self.strength_of_far_attack,
+                                  args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
+        elif args and args[3] == 1:
+            global current_x
+            global current_y
+            if current_x == self.x and current_y == self.y:
+                self.x = args[4][0] * 10 + 10
+                self.y = args[4][1] * 10 + 10
+                self.rect.x = args[4][0] * 10 + 10
+                self.rect.y = args[4][1] * 10 + 10
 
 
 class BigTank(pygame.sprite.Sprite):
@@ -737,7 +850,16 @@ class BigTank(pygame.sprite.Sprite):
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
+            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack,
+                                  args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
+        elif args and args[3] == 1:
+            global current_x
+            global current_y
+            if current_x == self.x and current_y == self.y:
+                self.x = args[4][0] * 10 + 10
+                self.y = args[4][1] * 10 + 10
+                self.rect.x = args[4][0] * 10 + 10
+                self.rect.y = args[4][1] * 10 + 10
 
 
 class Turel(pygame.sprite.Sprite):
@@ -772,7 +894,16 @@ class Turel(pygame.sprite.Sprite):
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack)
+            haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack,
+                                  args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
+        elif args and args[3] == 1:
+            global current_x
+            global current_y
+            if current_x == self.x and current_y == self.y:
+                self.x = args[4][0] * 10 + 10
+                self.y = args[4][1] * 10 + 10
+                self.rect.x = args[4][0] * 10 + 10
+                self.rect.y = args[4][1] * 10 + 10
 
 
 class Ore(pygame.sprite.Sprite):
@@ -786,6 +917,10 @@ class Ore(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_tekstur(args[1], "Рудник", args[2])
+
 
 class Mountain(pygame.sprite.Sprite):
     image = None
@@ -798,6 +933,10 @@ class Mountain(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_tekstur(args[1], "Гора", args[2])
+
 
 class Building(pygame.sprite.Sprite):
     image = None
@@ -809,6 +948,10 @@ class Building(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_tekstur(args[1], "Здание", args[2])
 
 
 #class Park(Tile):
@@ -827,6 +970,10 @@ class Barak(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_tekstur(args[1], " Барак", args[2])
+
 class Center(pygame.sprite.Sprite):
     image = None
 
@@ -837,6 +984,10 @@ class Center(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_tekstur(args[1], " Командный Центр", args[2])
 
 class Road(pygame.sprite.Sprite):
     image = None
@@ -860,6 +1011,10 @@ class Factory(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            haracteristica_tekstur(args[1], "Завод", args[2])
+
 
 def main():
     pygame.init()
@@ -869,7 +1024,6 @@ def main():
     board = Board(64, 64)
     board.set_view(10, 10, 10)
     all_sprites = pygame.sprite.Group()
-
     ind_rud = [(1, 1, 10), (1, 2, 10), (1, 3, 10), (1, 4, 10), (1, 5, 9), (1, 6, 9), (1, 7, 7), (1, 8, 7), (1, 9, 7),
                (1, 10, 7), (1, 11, 5), (1, 12, 5), (1, 13, 5), (1, 14, 5), (1, 15, 5), (1, 16, 5), (1, 17, 3),
                (1, 18, 3), (1, 19, 3), (1, 20, 3), (1, 21, 3), (1, 61, 4), (1, 62, 4), (1, 63, 4), (1, 64, 4),
@@ -895,33 +1049,40 @@ def main():
         for i in range(l):
             for q in range(l1):
                 Mountain(all_sprites, x=(10 * x1 + i * 10), y=(10 * y1 + q * 10))
-
-    ind_road = [(1, 22, 16, 13)]
-    for j in ind_road:
-        x1 = j[0]
-        y1 = j[1]
-        l = j[2]
-        l1 = j[3]
-        for i in range(l):
-            for q in range(l1):
-                Road(all_sprites, x=(10 * x1 + i * 10 + 1), y=(10 * y1 + q * 10 + 1))
     #Barak(all_sprites, x=30, y=30)
     Center(all_sprites, x=60, y=610)
     Center(all_sprites, x=570, y=40)
-    #Road(all_sprites, x=200, y=200)
+
+    Peshka(all_sprites, x=110, y=110)
+    Tank(all_sprites, x=110, y=320)
+    Sprinter(all_sprites, x=110, y=130)
+    SuperCannon(all_sprites, x=110, y=200)
+    BigTank(all_sprites, x=110, y=250)
+    Builder(all_sprites, x=110, y=370)
+    Turel(all_sprites, x=110, y=450)
     #Factory(all_sprites, x=300, y=300)
     running = True
+    board.render(screen)
     while running:
         all_sprites.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                all_sprites.update(event, screen)
-        board.render(screen)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                all_sprites.update(event, screen, board, 0)
+                board.get_click(event.pos, screen, all_sprites, event, board)
         all_sprites.draw(screen)
         pygame.display.flip()
     pygame.quit()
 
 if __name__ == '__main__':
     main()
+
+
+flag_move = [0, 1]
+current_length = 0
+current_x = 0
+current_y = 0
+previous_cell = (0, 0)
+current_a = 0
+current_b = 0
