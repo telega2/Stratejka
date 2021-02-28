@@ -607,7 +607,7 @@ class Board:
             screen.blit(textSurfaceObj, textRectObj)
 
         elif flag_move == 3 and mouse_pos[0] > 700 and mouse_pos[1] > 290 and mouse_pos[0] < 800 and mouse_pos[1] < 310:
-            all_sprites.update(event, screen, board, 1, previous_cell)
+            all_sprites.update(event, screen, board, 1, previous_cell, flag_rotate)
             board.render(screen)
             pygame.draw.rect(screen, (0, 0, 0), (650, 0, 870 - 650, 650))
             flag_move = 0
@@ -801,6 +801,8 @@ class SuperCannon(pygame.sprite.Sprite):
         pass
 
     def update(self, *args):
+        if args and args[-1]:
+            self.a, self.b = self.b, self.a
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
             haracteristica_geroev(args[1], self.price, self.hp, "No", self.strength_of_far_attack,
                                   args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
