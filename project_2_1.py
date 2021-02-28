@@ -563,8 +563,8 @@ class Board:
             flag_move = 2
         elif (flag_move == 2 or flag_move == 3) and mouse_pos[0] > current_x - current_length * 10 and\
                 mouse_pos[1] > current_y - current_length * 10 and\
-                mouse_pos[0] < current_x + current_length * 10 + 10 * current_a and \
-                mouse_pos[1] < current_y + current_length * 10 + 10 * current_b:
+                mouse_pos[0] < current_x + current_length * 10 + 10 and \
+                mouse_pos[1] < current_y + current_length * 10 + 10:
             pygame.draw.rect(screen, (0, 255, 0), (cell[0] * 10 + 10, cell[1] * 10 + 10, 10, 10))
             pygame.draw.rect(screen, (255, 0, 0), (previous_cell[0] * 10 + 10, previous_cell[1] * 10 + 10, 10, 10))
             previous_cell = cell
@@ -581,7 +581,7 @@ class Board:
             flag_move = 0
 
     def moving(self, screen, x, y, length, a, b):
-        pygame.draw.rect(screen, (255, 0, 0), (x - length * 10, y - length * 10, length * 20 + 10 * a, length * 20 + 10 * b))
+        pygame.draw.rect(screen, (255, 0, 0), (x - length * 10, y - length * 10, length * 20 + 10, 10 + length * 20))
         #for i in range(length):
          #   pygame.draw.rect(screen, (255, 0, 0), (x - length * 10 + i * 10, y - i * 10, 10, 10 + 20 * i))
         #pygame.draw.rect(screen, (255, 0, 0), (x, y - length * 10, 10, 10 + 20 * length))
@@ -1075,10 +1075,6 @@ def main():
         pygame.display.flip()
     pygame.quit()
 
-if __name__ == '__main__':
-    main()
-
-
 flag_move = [0, 1]
 current_length = 0
 current_x = 0
@@ -1086,3 +1082,6 @@ current_y = 0
 previous_cell = (0, 0)
 current_a = 0
 current_b = 0
+
+if __name__ == '__main__':
+    main()
