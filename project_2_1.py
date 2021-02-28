@@ -589,7 +589,8 @@ class Board:
                 mouse_pos[1] < current_y + current_length * 10 + 10 * current_b:
                 pygame.draw.rect(screen, (0, 255, 0), (current_x - current_length * 10, current_y - current_length * 10, 10, 10))
                 cell =[current_x // 10 - current_length - 1, -1 + current_y // 10 - current_length]
-            pygame.draw.rect(screen, (255, 0, 0), (previous_cell[0] * 10 + 10, previous_cell[1] * 10 + 10, 10, 10))
+            if cell != previous_cell:
+                pygame.draw.rect(screen, (255, 0, 0), (previous_cell[0] * 10 + 10, previous_cell[1] * 10 + 10, 10, 10))
             previous_cell = cell
             flag_move = 3
 
