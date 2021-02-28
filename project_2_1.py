@@ -803,6 +803,11 @@ class SuperCannon(pygame.sprite.Sprite):
     def update(self, *args):
         if args and args[-1]:
             self.a, self.b = self.b, self.a
+            self.image = load_image("SuperCannon 90.PNG")
+            SuperCannon.image = self.image
+            self.rect = self.image.get_rect()
+            self.rect.x = x
+            self.rect.y = y
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
             haracteristica_geroev(args[1], self.price, self.hp, "No", self.strength_of_far_attack,
                                   args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
@@ -892,6 +897,13 @@ class BigTank(pygame.sprite.Sprite):
         pass
 
     def update(self, *args):
+        if args and args[-1]:
+            self.a, self.b = self.b, self.a
+            self.image = load_image("BigTank 90.PNG")
+            BigTank.image = self.image
+            self.rect = self.image.get_rect()
+            self.rect.x = x
+            self.rect.y = y
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
             haracteristica_geroev(args[1], self.price, self.hp, "NO", self.strength_of_far_attack,
                                   args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
