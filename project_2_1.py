@@ -791,6 +791,8 @@ class SuperCannon(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.image1 = "SuperCannon.PNG"
+        self.image2 = "SuperCannon 90.PNG"
 
     def spisok_deistvii(self):
         pass
@@ -804,7 +806,8 @@ class SuperCannon(pygame.sprite.Sprite):
     def update(self, *args):
         if args and args[-1]:
             self.a, self.b = self.b, self.a
-            self.image = load_image("SuperCannon 90.PNG")
+            self.image1, self.image2 = self.image2, self.image1
+            self.image = load_image(self.image1)
             SuperCannon.image = self.image
             self.rect = self.image.get_rect()
             self.rect.x = x
@@ -887,6 +890,8 @@ class BigTank(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.image1 = "BigTank.PNG"
+        self.image2 = "BigTank 90.PNG"
 
     def spisok_deistvii(self):
         pass
@@ -900,7 +905,8 @@ class BigTank(pygame.sprite.Sprite):
     def update(self, *args):
         if args and args[-1]:
             self.a, self.b = self.b, self.a
-            self.image = load_image("BigTank 90.PNG")
+            self.image1, self.image2 = self.image2, self.image1
+            self.image = load_image(self.image1)
             BigTank.image = self.image
             self.rect = self.image.get_rect()
             self.rect.x = x
