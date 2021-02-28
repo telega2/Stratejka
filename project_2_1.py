@@ -554,6 +554,7 @@ class Board:
         global current_y
         global current_x
         global flag_move
+        global flag_rotate
         global previous_cell
         global current_a
         global current_b
@@ -569,16 +570,34 @@ class Board:
             pygame.draw.rect(screen, (255, 0, 0), (previous_cell[0] * 10 + 10, previous_cell[1] * 10 + 10, 10, 10))
             previous_cell = cell
             flag_move = 3
+
             fontObj = pygame.font.Font('freesansbold.ttf', 15)
             textSurfaceObj = fontObj.render(f"CHOOSE", True, (255, 0, 0), (0, 0, 0))
             textRectObj = textSurfaceObj.get_rect()
             textRectObj.center = (750, 300)
             screen.blit(textSurfaceObj, textRectObj)
+
+            fontObj = pygame.font.Font('freesansbold.ttf', 15)
+            textSurfaceObj = fontObj.render(f"ROTATE", True, (255, 0, 0), (0, 0, 0))
+            textRectObj = textSurfaceObj.get_rect()
+            textRectObj.center = (750, 350)
+            pygame.draw.rect(screen, (100, 100, 100), (800, 342, 15, 15))
+            screen.blit(textSurfaceObj, textRectObj)
+
         elif flag_move == 3 and mouse_pos[0] > 700 and mouse_pos[1] > 290 and mouse_pos[0] < 800 and mouse_pos[1] < 310:
             all_sprites.update(event, screen, board, 1, previous_cell)
             board.render(screen)
             pygame.draw.rect(screen, (0, 0, 0), (650, 0, 870 - 650, 650))
             flag_move = 0
+            # работа CHOOSE
+
+        elif flag_move == 3 and mouse_pos[0] > 700 and mouse_pos[1] > 340 and mouse_pos[0] < 800 and mouse_pos[1] < 360:
+            flag_rotate = not flag_rotate
+            if flag_rotate:
+                pygame.draw.rect(screen, (0, 100, 0), (800, 342, 15, 15))
+            else:
+                pygame.draw.rect(screen, (100, 100, 100), (800, 342, 15, 15))
+            # работа ROTATE
 
     def moving(self, screen, x, y, length, a, b):
         pygame.draw.rect(screen, (255, 0, 0), (x - length * 10, y - length * 10, length * 20 + 10, 10 + length * 20))
@@ -1076,6 +1095,7 @@ def main():
     pygame.quit()
 
 flag_move = [0, 1]
+flag_rotate = False
 current_length = 0
 current_x = 0
 current_y = 0
