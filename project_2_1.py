@@ -587,8 +587,8 @@ class Board:
                 mouse_pos[1] > current_y + current_length * 10 + 10 and\
                 mouse_pos[0] < current_x + current_length * 10 + 10 * current_a and \
                 mouse_pos[1] < current_y + current_length * 10 + 10 * current_b:
-                pygame.draw.rect(screen, (0, 255, 0), (current_x, current_y, 10 * current_a, 10 * current_b))
-                cell =[current_x // 10 + current_length - 1, -1 + current_y // 10 + current_length]
+                pygame.draw.rect(screen, (0, 255, 0), (current_x - current_length * 10, current_y - current_length * 10, 10, 10))
+                cell =[current_x // 10 - current_length - 1, -1 + current_y // 10 - current_length]
             if cell != previous_cell:
                 pygame.draw.rect(screen, (255, 0, 0), (previous_cell[0] * 10 + 10, previous_cell[1] * 10 + 10, 10, 10))
             previous_cell = cell
@@ -773,7 +773,6 @@ class Builder(pygame.sprite.Sprite):
 
 class SuperCannon(pygame.sprite.Sprite):
     image = None
-    image90 = None
 
     def __init__(self, *group, x, y):
         super().__init__(*group)
@@ -788,9 +787,7 @@ class SuperCannon(pygame.sprite.Sprite):
         self.b = 5
         self.length_of_movement = 2
         self.image = load_image("SuperCannon.PNG")
-        self.image90 = load_image("SuperCannon90.PNG")
-        SuperCannon.image = load_image("SuperCannon.PNG")
-        SuperCannon.image90 = load_image("SuperCannon90.PNG")
+        SuperCannon.image = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -807,10 +804,6 @@ class SuperCannon(pygame.sprite.Sprite):
     def update(self, *args):
         if args and args[-1]:
             self.a, self.b = self.b, self.a
-            SuperCannon.image = self.image90
-            self.rect = self.image90.get_rect()
-            self.rect.x = self.y
-            self.rect.y = self.x
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
             haracteristica_geroev(args[1], self.price, self.hp, "No", self.strength_of_far_attack,
                                   args[2], self.x, self.y, self.length_of_movement, self.a, self.b)
