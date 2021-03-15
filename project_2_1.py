@@ -612,6 +612,7 @@ class Board:
             board.render(screen)
             pygame.draw.rect(screen, (0, 0, 0), (650, 0, 870 - 650, 650))
             flag_move = 0
+            flag_rotate = False
             # работа CHOOSE
 
         elif flag_move == 3 and mouse_pos[0] > 700 and mouse_pos[1] > 340 and mouse_pos[0] < 800 and mouse_pos[1] < 360:
@@ -773,6 +774,7 @@ class Builder(pygame.sprite.Sprite):
 
 class SuperCannon(pygame.sprite.Sprite):
     image = None
+    image_rotate = None
 
     def __init__(self, *group, x, y):
         super().__init__(*group)
@@ -786,8 +788,10 @@ class SuperCannon(pygame.sprite.Sprite):
         self.a = 4
         self.b = 5
         self.length_of_movement = 2
-        self.image = load_image("SuperCannon.PNG")
-        SuperCannon.image = self.image
+        SuperCannon.image = load_image("SuperCannon.PNG")
+        SuperCannon.image_rotate = load_image("SuperCannon90.PNG")
+        self.image = SuperCannon.image
+        self.image_rotate = SuperCannon.image_rotate
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -815,6 +819,12 @@ class SuperCannon(pygame.sprite.Sprite):
                 self.y = args[4][1] * 10 + 10
                 self.rect.x = args[4][0] * 10 + 10
                 self.rect.y = args[4][1] * 10 + 10
+                if args and args[5]:
+                    self.image, self.image_rotate = self.image_rotate, self.image
+                    self.rect = self.image.get_rect()
+                    self.rect.x = self.x
+                    self.rect.y = self.y
+
 
 
 class Tank(pygame.sprite.Sprite):
@@ -864,6 +874,7 @@ class Tank(pygame.sprite.Sprite):
 
 class BigTank(pygame.sprite.Sprite):
     image = None
+    image_rotate = None
 
     def __init__(self, *group, x, y):
         super().__init__(*group)
@@ -877,8 +888,10 @@ class BigTank(pygame.sprite.Sprite):
         self.a = 2
         self.b = 3
         self.length_of_movement = 3
-        self.image = load_image("BigTank.PNG")
-        BigTank.image = self.image
+        SuperCannon.image = load_image("BigTank.PNG")
+        SuperCannon.image_rotate = load_image("BigTank90.PNG")
+        self.image = SuperCannon.image
+        self.image_rotate = SuperCannon.image_rotate
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -904,6 +917,11 @@ class BigTank(pygame.sprite.Sprite):
                 self.y = args[4][1] * 10 + 10
                 self.rect.x = args[4][0] * 10 + 10
                 self.rect.y = args[4][1] * 10 + 10
+                if args and args[5]:
+                    self.image, self.image_rotate = self.image_rotate, self.image
+                    self.rect = self.image.get_rect()
+                    self.rect.x = self.x
+                    self.rect.y = self.y
 
 
 class Turel(pygame.sprite.Sprite):
